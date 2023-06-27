@@ -11,6 +11,18 @@ from nltk.corpus import stopwords
 
 
 def basic_clean(string):
+    """
+    Perform basic cleaning operations on the input string.
+    
+    Args:
+        string (str): The input string to be cleaned.
+        
+    Returns:
+        str: The cleaned string after performing the following operations:
+             1. Lowercasing all characters.
+             2. Normalizing the string by converting it to ASCII and removing any diacritics.
+             3. Removing any characters that are not lowercase letters, digits, apostrophes, or whitespaces.
+    """
     
     string = string.lower() #lowercasing
     string = unicodedata.normalize('NFKD', string).encode('ascii', 'ignore').decode('utf-8') #normalizing
@@ -19,6 +31,15 @@ def basic_clean(string):
     return string
 
 def tokenize(string):
+    """
+    Tokenizes a given string into individual tokens.
+    
+    Args:
+        string (str): The input string to be tokenized.
+        
+    Returns:
+        str: The tokenized string.
+    """
     
     tokenize = nltk.tokenize.ToktokTokenizer() #creating the tokenize
     string = tokenize.tokenize(string, return_str=True) #using the tokenize
@@ -27,6 +48,15 @@ def tokenize(string):
 
 
 def stem(string):
+    """
+    Apply stemming to the input string using the Porter stemming algorithm.
+
+    Args:
+        string (str): The input string to be stemmed.
+
+    Returns:
+        str: The stemmed string where each word has been transformed to its root form.
+    """
     
     ps = nltk.porter.PorterStemmer() #creating my stemmer
     stems = [ps.stem(word) for word in string.split()] #splitting into each word and applying the stemmer
@@ -35,6 +65,18 @@ def stem(string):
     return string
 
 def remove_stopwords(string, extra_words=[], exclude_words=[]):
+    """
+    Removes stopwords from a given string.
+
+    Args:
+        string (str): The input string from which stopwords need to be removed.
+        extra_words (list, optional): Additional words to be considered as stopwords. Defaults to an empty list.
+        exclude_words (list, optional): Words to be excluded from the stopwords list. Defaults to an empty list.
+
+    Returns:
+        str: The input string with stopwords removed.
+
+    """
     
     stopwords_ls = stopwords.words('english') #defining my stopwords
     
@@ -48,6 +90,15 @@ def remove_stopwords(string, extra_words=[], exclude_words=[]):
     return string
 
 def lemmatize(string):
+    """
+    Lemmatizes a given string using WordNetLemmatizer from NLTK.
+
+    Args:
+        string (str): The input string to be lemmatized.
+
+    Returns:
+        str: The lemmatized string.
+    """
     
     wnl = nltk.stem.WordNetLemmatizer() #creating my lemmatizer
     lemmas = [wnl.lemmatize(word) for word in string.split()] #splitting my string into words and applying the lemma
@@ -55,12 +106,20 @@ def lemmatize(string):
 
     return string
 
-def clean_df(df, extra_words=[], exclude_words=[]):
+def clean_df(df, original, extra_words=[], exclude_words=[]):
     """
-    Send in df with columns: title and original,
-    returns df with original, clean, stemmed, and lemmatized data
+    Clean and preprocess a DataFrame column.
+    
+    Parameters:
+        - df (pandas.DataFrame): The DataFrame containing the data to be cleaned.
+        - original (str): The name of the column in the DataFrame to be cleaned.
+        - extra_words (list, optional): Additional words to be included in the list of stopwords. Default is an empty list.
+        - exclude_words (list, optional): Words to be excluded from the list of stopwords. Default is an empty list.
+        
+    Returns:
+        pandas.DataFrame: The cleaned DataFrame with additional columns for cleaned, stemmed, and lemmatized versions of the original column.
     """
-    df['clean'] = df.original\
+    df['clean'] = df[original]\
                         .apply(basic_clean)\
                         .apply(tokenize)\
                         .apply(remove_stopwords, 
