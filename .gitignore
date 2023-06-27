@@ -4,3 +4,4 @@ env.py
 __pycache__
 .vscode/
 *.csv
+keila_wrangle_nb.ipynb
