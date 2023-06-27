@@ -8,7 +8,8 @@ import re
 import unicodedata
 import nltk
 from nltk.corpus import stopwords
-
+import json
+from sklearn.model_selection import train_test_split
 
 def basic_clean(string):
     """
@@ -106,7 +107,7 @@ def lemmatize(string):
 
     return string
 
-def clean_df(df, original, extra_words=[], exclude_words=[]):
+def clean_df(df, extra_words=[], exclude_words=[]):
     """
     Clean and preprocess a DataFrame column.
     
@@ -119,7 +120,7 @@ def clean_df(df, original, extra_words=[], exclude_words=[]):
     Returns:
         pandas.DataFrame: The cleaned DataFrame with additional columns for cleaned, stemmed, and lemmatized versions of the original column.
     """
-    df['clean'] = df[original]\
+    df['clean'] = df.readme_contents\
                         .apply(basic_clean)\
                         .apply(tokenize)\
                         .apply(remove_stopwords, 
@@ -129,3 +130,18 @@ def clean_df(df, original, extra_words=[], exclude_words=[]):
     df['lemmatized'] = df.clean.apply(lemmatize)
     
     return df
+
+def split_data(df, target_variable):
+    '''
+    Takes in two arguments the dataframe name and the ("target_variable" - must be in string format) to stratify  and 
+    return train, validate, test subset dataframes will output train, validate, and test in that order.
+    '''
+    train, test = train_test_split(df, #first split
+                                   test_size=.2, 
+                                   random_state=123, 
+                                   stratify= df[target_variable])
+    train, validate = train_test_split(train, #second split
+                                    test_size=.25, 
+                                    random_state=123, 
+                                    stratify=train[target_variable])
+    return train, validate, test
