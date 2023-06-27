@@ -11,6 +11,9 @@ from nltk.corpus import stopwords
 import json
 from sklearn.model_selection import train_test_split
 
+import warnings
+warnings.filterwarnings('ignore')
+
 def basic_clean(string):
     """
     Perform basic cleaning operations on the input string.
@@ -120,6 +123,15 @@ def clean_df(df, extra_words=[], exclude_words=[]):
     Returns:
         pandas.DataFrame: The cleaned DataFrame with additional columns for cleaned, stemmed, and lemmatized versions of the original column.
     """
+    # dropping nulls
+    df = df.dropna()
+    
+    # Define a list of the most common languages (hard-coded for time)
+    languages = ['JavaScript', 'Objective-C', 'Java', 'Ruby', 'Python', 'Swift']
+
+    # Change values to "other" if not in the most common languages
+    df.loc[~df['language'].isin(languages), 'language'] = 'other'
+
     df['clean'] = df.readme_contents\
                         .apply(basic_clean)\
                         .apply(tokenize)\
@@ -129,9 +141,12 @@ def clean_df(df, extra_words=[], exclude_words=[]):
     df['stemmed'] = df.clean.apply(stem)
     df['lemmatized'] = df.clean.apply(lemmatize)
     
+    # add a column which is the length of the string in readme_contents
+    df['readme_length'] = [len(content) for content in df.readme_contents]
+    
     return df
 
-def split_data(df, target_variable):
+def split_data(df, target_variable='language'):
     '''
     Takes in two arguments the dataframe name and the ("target_variable" - must be in string format) to stratify  and 
     return train, validate, test subset dataframes will output train, validate, and test in that order.

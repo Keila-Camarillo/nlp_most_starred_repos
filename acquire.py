@@ -6,6 +6,7 @@ After doing so, run it like this:
     python acquire.py
 To create the `data.json` file that contains the data.
 """
+import pandas as pd
 import os
 import json
 from typing import Dict, List, Optional, Union, cast
@@ -216,6 +217,17 @@ def scrape_github_data() -> List[Dict[str, str]]:
     """
     return [process_repo(repo) for repo in REPOS]
 
+def get_data_json(filename = 'data.json'):
+    """ This function will
+    - read the web-scraped data from the filename (default data.json)
+    - return a dataframe ready for cleaning
+    """
+    ## 
+    f = open(filename)
+    df = json.load(f)
+    df = pd.DataFrame(df)
+
+    return df
 
 if __name__ == "__main__":
     data = scrape_github_data()
