@@ -21,7 +21,6 @@ from env import github_token, github_username
 # TODO: Add your github username to your env.py file under the variable `github_username`
 # TODO: Add more repositories to the `REPOS` list below.
 
-#  'enormego/EGOImageLoading',
 REPOS = ['DroidPluginTeam/DroidPlugin',
  'angular-app/angular-app',
  'doctrine/event-manager',
@@ -79,13 +78,11 @@ REPOS = ['DroidPluginTeam/DroidPlugin',
  'achiurizo/consular',
  'bither/bither-android-lib',
  'dwyl/book',
-
  'timjansen/minified.js',
  'meiwin/NgKeyboardTracker',
  'microsoftarchive/android-sliding-layer-lib',
  'KieranLafferty/KLNoteViewController',
  'matryer/silk',
- #
  'thingdom/node-neo4j',
  'Freelander/Elephant',
  'adnan-SM/TimelyTextView',
@@ -143,7 +140,6 @@ REPOS = ['DroidPluginTeam/DroidPlugin',
  'postmates/PMKVObserver',
  'laoqiren/web-performance',
  'jtrussell/angular-snap.js']
-ex = []
 
 
 
