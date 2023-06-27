@@ -68,7 +68,7 @@ def stem(string):
     
     return string
 
-def remove_stopwords(string, extra_words=[], exclude_words=[]):
+def remove_stopwords(string, extra_words=["'", "&#9;"], exclude_words=[]):
     """
     Removes stopwords from a given string.
 
@@ -110,7 +110,7 @@ def lemmatize(string):
 
     return string
 
-def clean_df(df, extra_words=[], exclude_words=[]):
+def clean_df(df, extra_words=["'", "&#9;"], exclude_words=[]):
     """
     Clean and preprocess a DataFrame column.
     
@@ -143,6 +143,9 @@ def clean_df(df, extra_words=[], exclude_words=[]):
     
     # add a column which is the length of the string in readme_contents
     df['readme_length'] = [len(content) for content in df.readme_contents]
+    
+    # drop columns
+    df = df.drop(columns=["clean","stemmed"])
     
     return df
 
