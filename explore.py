@@ -1,5 +1,6 @@
 import nltk
 import pandas as pd
+from itertools import combinations
 
 import warnings
 warnings.filterwarnings("ignore")
@@ -162,3 +163,24 @@ def plot_bigrams_graph():
 
     # Display the plot
     plt.show()
+
+# defining a functioin to get mannwhitneyu test results of readme_lengths compared to language
+def get_mannwhitneyu_combo_tests(train):
+    """
+    This function will
+    - accept a dataframe for stats testing from GitHub Repository NLP project
+    - df must have two columns: language and readme_length, or it will break
+    - runs mannwhitneyu tests on the subpopulation groups of all combinations of two languages
+    - if p-value is < .05, it prints out the combo and the p-value
+    - finally, it prints out the number of combos that had a p-value < .05 and the total # of combos
+    """
+    total = 0
+    p_count = 0
+    for combo in combinations(train.language.unique(), 2):
+        total += 1
+        stat, p = stats.mannwhitneyu(train[train.language == combo[0]].readme_length, train[train.language == combo[1]].readme_length)
+        if p < .05:
+            print(f'{combo}: p-value = {p}')
+            p_count += 1
+    print()
+    print(f'{p_count} of {total} combinations had p-values < .05') 

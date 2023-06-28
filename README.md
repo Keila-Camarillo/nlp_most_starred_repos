@@ -27,9 +27,8 @@ Our initial hypothesis is that there will be some unique words found in README f
    * Answer the following initial questions
        1. What are the most common words in READMEs?
        2. Does the length of the README vary by programming language?
-       3. Do different programming languages use a different number of unique words?
-       4. Are there any words that uniquely identify a programming language?
-       5. Are there bigrams or n-grams that can uniquely identify a programming language?
+       3. Are there any words that uniquely identify a programming language?
+       4. Are there bigrams or n-grams that can uniquely identify a programming language?
       
 * Develop a Model to predict the main programming language of each README
    * Use drivers identified in explore to build predictive models of different types
