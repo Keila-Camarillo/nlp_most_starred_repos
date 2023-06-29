@@ -9,7 +9,7 @@ Click [here](https://docs.google.com/presentation/d/1rCLXl60FxKvjrrH8RpA5JjgofPz
  
 # Project Goal
  
-* Discover README features that indicate the repository programming language
+* Discover features of README.md files that indicate the repository programming language
 * Use features to develop a machine learning model to predict the repository's main programming language
  
 # Initial Thoughts
@@ -18,7 +18,8 @@ Our initial hypothesis is that there will be some unique words found in README f
  
 # The Plan
  
-* Acquire a corpus of GitHub repository README files via GitHub API. Our data comes from the top 100 most-starred repositories on GitHub current as of 27 Jun 2023.
+* Acquire a corpus of GitHub repository README files via GitHub API. 
+* Our data comes from the top 100 most-starred repositories on GitHub current as of 27 Jun 2023.
  
 * Prepare data
     * Clean text by making all text lowercase, removing special characters, tokenizing the words into discrete units, and lemmatizing them to get word roots
@@ -72,7 +73,7 @@ IF YOU WANT TO USE THE SAME DATA ACQUIRED ON 27 JUN 2023
 * There were 19 different languages in our dataset, 6 of which occurred only once, and 4 only twice
 * The length of the readme did not correlate to the type of language
 * There were some words and word combinations that correlated with the programming language.
-    - For example, README's where Ruby was the main programming language were much more likely to have 'ruby', 'end', and 'order.  Where Swift was the main language, 'true' and 'type' appeared much more often.
+    - For example, README's where 'user' and 'end' appeared, the language was much more likely to be Ruby.  Where 'option' and 'image' appeared, JavaScript was more likely to be the main language.
  
 # Conclusion and Recommendations
 * Our best model was a Decision Tree model. The baseline was 27% (guessing 'JavaScript' for every entry would have been correct 27% of the time), and our best model achieved a 63% accuracy on the test data set. This is the expected accuracy on unseen data.
