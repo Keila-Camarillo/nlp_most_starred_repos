@@ -163,3 +163,77 @@ def split_data(df, target_variable='language'):
                                     random_state=123, 
                                     stratify=train[target_variable])
     return train, validate, test
+
+
+#defining a function to experiment with a different basic_clean
+def basic_clean2(string):
+    """
+    Perform basic cleaning operations on the input string.
+    
+    Args:
+        string (str): The input string to be cleaned.
+        
+    Returns:
+        str: The cleaned string after performing the following operations:
+             1. Lowercasing all characters.
+             2. Normalizing the string by converting it to ASCII and removing any diacritics.
+             3. Removing any characters that are not lowercase letters, digits, apostrophes, or whitespaces.
+    """
+    
+    string = string.lower() #lowercasing
+    string = unicodedata.normalize('NFKD', string).encode('ascii', 'ignore').decode('utf-8') #normalizing
+    # string = re.sub(r'[^a-z0-9\'\s]', '', string) #replace extra things
+    
+    # get rid of extra carriage returns (\r) and new line (\n) characters
+    string = re.sub(r'\s+', ' ', string)
+    # get rid of website urls
+    # string = re.sub(r'\(http.+?\)', ' ', string)    
+    # remove everything that is not a letter, and replace it with a space
+    string = re.sub(r'[^a-z]', ' ', string)
+    # remove single-letter words
+    string = re.sub(r'\b[a-z]\b', ' ', string)
+    
+    return string
+
+# defining a function to experiment with different basic_clean
+def clean_df2(df, extra_words=["'", "&#9;", "http", "github", "com"], exclude_words=[]):
+    """
+    Clean and preprocess a DataFrame column.
+    
+    Parameters:
+        - df (pandas.DataFrame): The DataFrame containing the data to be cleaned.
+        - original (str): The name of the column in the DataFrame to be cleaned.
+        - extra_words (list, optional): Additional words to be included in the list of stopwords. Default is an empty list.
+        - exclude_words (list, optional): Words to be excluded from the list of stopwords. Default is an empty list.
+        
+    Returns:
+        pandas.DataFrame: The cleaned DataFrame with additional columns for cleaned, stemmed, and lemmatized versions of the original column.
+    """
+    # dropping nulls
+    df = df.dropna()
+    
+    # Define a list of the most common languages (hard-coded for time)
+    languages = ['JavaScript', 'Objective-C', 'Java', 'Ruby', 'Python', 'Swift']
+
+    # Change values to "other" if not in the most common languages
+    df.loc[~df['language'].isin(languages), 'language'] = 'other'
+
+    # run through basic_clean, then apply tokenize and remove_stopwords to that column sequentially
+    df['clean'] = df.readme_contents.apply(basic_clean2)
+    df['clean'] = df.clean.apply(tokenize)
+    df['clean'] = df.clean.apply(remove_stopwords, extra_words=extra_words, exclude_words=exclude_words)
+
+    # make stemmed and lemmatized columns
+    df['stemmed'] = df.clean.apply(stem)
+    df['lemmatized'] = df.clean.apply(lemmatize)
+
+    # I'm not sure why, but 'http' was left in, so call remove_stopwords again to remove it
+    df['lemmatized'] = df.lemmatized.apply(remove_stopwords, extra_words=extra_words, exclude_words=exclude_words)
+    
+    # add a column which is the length of the string in readme_contents
+    df['readme_length'] = [len(content) for content in df.readme_contents]
+    
+    # drop columns
+    df = df.drop(columns=["clean","stemmed"])
+    
+    return df
